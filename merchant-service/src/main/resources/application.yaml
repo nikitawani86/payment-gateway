@@ -1,3 +1,25 @@
 spring:
   application:
     name: merchant-service
+  datasource: 
+    url: jdbc:postgresql://localhost:5432/merchant_service
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  show-sql: true
+  open-in-view: false
+  properties:
+   hibernate:
+     format_sql: true
+eureka:
+  client:
+   service-url:
+     defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}	 
+
+management:
+  endpoints:
+    web:
+     exposure:
+       include: health,info

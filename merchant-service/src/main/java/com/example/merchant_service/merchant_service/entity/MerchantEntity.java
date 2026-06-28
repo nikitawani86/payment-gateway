@@ -40,7 +40,7 @@ public class MerchantEntity {
 	@Column(name = "merchant_reference", nullable = false, unique = true)
 	private UUID merchantReference;
 
-	@Column(name = "merchant_name", nullable = false)
+	@Column(name = "marchant_name", nullable = false)
 	private String merchantName;
 
 	@Column(nullable = false, unique = true)
