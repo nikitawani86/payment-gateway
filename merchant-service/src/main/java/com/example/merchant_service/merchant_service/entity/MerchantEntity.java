@@ -37,7 +37,7 @@ public class MerchantEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "merchant_reference", nullable = false, unique = true)
+	@Column(name = "merchant_reference", nullable = false,unique = true)
 	private UUID merchantReference;
 
 	@Column(name = "marchant_name", nullable = false)
