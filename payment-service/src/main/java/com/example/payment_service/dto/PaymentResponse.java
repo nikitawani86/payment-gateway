@@ -1,6 +1,7 @@
 package com.example.payment_service.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.example.payment_service.domains.PaymentMethod;
@@ -24,6 +25,8 @@ public class PaymentResponse {
 	private String currency;
 	private PaymentMethod paymentMethod;
 	private PaymentStatus status;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 	
 	
 

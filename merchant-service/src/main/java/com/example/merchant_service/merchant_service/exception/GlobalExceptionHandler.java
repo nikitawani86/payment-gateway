@@ -17,8 +17,8 @@ import com.example.merchant_service.merchant_service.dto.ApiResponse;
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MerchantNotFoundException.class)
-	public ResponseEntity<ApiResponse<Object>> handleMerchantNotFound(MerchantNotFoundException exception) {
-		ApiResponse<Object> response = ApiResponse.builder().success(false).message(exception.getMessage()).data(null)
+	public ResponseEntity<ApiResponse<Void>> handleMerchantNotFound(MerchantNotFoundException exception) {
+		ApiResponse<Void> response = ApiResponse.<Void>builder().success(false).message(exception.getMessage()).data(null)
 				.timestamp(LocalDateTime.now()).build();
 
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(MerchantAlreadyExistsException.class)
-	public ResponseEntity<ApiResponse<Object>> handleMerchantAlreadyExists(MerchantAlreadyExistsException ex) {
-		ApiResponse<Object> response = ApiResponse.builder().success(false).message(ex.getMessage()).data(null)
+	public ResponseEntity<ApiResponse<Void>> handleMerchantAlreadyExists(MerchantAlreadyExistsException ex) {
+		ApiResponse<Void> response = ApiResponse.<Void>builder().success(false).message(ex.getMessage()).data(null)
 				.timestamp(LocalDateTime.now()).build();
 
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
@@ -45,5 +45,11 @@ public class GlobalExceptionHandler {
 				.message("Validation failed").data(errors).timestamp(LocalDateTime.now()).build();
 		return ResponseEntity.badRequest().body(response);
 
+	}
+	
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ApiResponse<Void>> handlerException(Exception ex){
+		ApiResponse<Void> response=  ApiResponse.<Void>builder().success(false).message("Internal Server Error").data(null).timestamp(LocalDateTime.now()).build();
+		 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 	}
 }
