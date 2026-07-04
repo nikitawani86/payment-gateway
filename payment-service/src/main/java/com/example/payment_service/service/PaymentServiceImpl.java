@@ -16,6 +16,7 @@ import com.example.payment_service.entity.PaymentEntity;
 import com.example.payment_service.entity.repository.PaymentRepository;
 import com.example.payment_service.exceptions.MerchantBlockedException;
 import com.example.payment_service.exceptions.MerchantInactiveException;
+import com.example.payment_service.exceptions.PaymentNotFoundException;
 import com.example.payment_service.feign.MerchantClient;
 
 import lombok.AllArgsConstructor;
@@ -67,7 +68,7 @@ public class PaymentServiceImpl implements PaymentService{
 	public PaymentResponse getPayment(UUID paymentReference) {
 		// TODO Auto-generated method stub
 
-		PaymentEntity payment = repo.findByPaymentReference(paymentReference).orElseThrow(() -> new RuntimeException("Payment Not Found") );
+		PaymentEntity payment = repo.findByPaymentReference(paymentReference).orElseThrow(() -> new PaymentNotFoundException("Resource doesn't exists" +paymentReference) );
 		return PaymentResponse.builder()
 			.paymentReference(payment.getPaymentReference())
 			.merchantReference(payment.getMerchantReference())
