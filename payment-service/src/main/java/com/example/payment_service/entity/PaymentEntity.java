@@ -40,7 +40,7 @@ public class PaymentEntity {
 	@Column(name = "payment_reference",nullable = false , unique = true)
 	private UUID paymentReference;
 	
-	@Column(name = "merchant_reference",nullable = false, unique = true)
+	@Column(name = "merchant_reference",nullable = false)
 	private UUID merchantReference;
 	
 	@Column(name = "amount",nullable = false,precision = 19,scale= 2)

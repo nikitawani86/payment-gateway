@@ -26,7 +26,6 @@ public class PaymentResponse {
 	private PaymentMethod paymentMethod;
 	private PaymentStatus status;
 	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
 	
 	
 

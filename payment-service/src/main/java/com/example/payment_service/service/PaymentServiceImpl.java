@@ -1,10 +1,13 @@
 package com.example.payment_service.service;
 
+import java.net.Authenticator.RequestorType;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.example.payment_service.domains.PaymentMethod;
+import com.example.payment_service.domains.PaymentStatus;
 import com.example.payment_service.dto.ApiResponse;
 import com.example.payment_service.dto.MerchantResponse;
 import com.example.payment_service.dto.PaymentRequest;
@@ -41,7 +44,8 @@ public class PaymentServiceImpl implements PaymentService{
 				.merchantReference(merchant.getMerchantReference())
 				.amount(request.getAmount())
 				.currency(request.getCurrency())
-				.createdAt(LocalDateTime.now())
+				.paymentMethod(request.getPaymentMethod())
+				.status(PaymentStatus.INITIATED)
 				.build();
 		
 		PaymentEntity paymentEntity = repo.save(payment);
@@ -50,6 +54,10 @@ public class PaymentServiceImpl implements PaymentService{
 				.paymentReference(paymentEntity.getPaymentReference())
 				.currency(paymentEntity.getCurrency())
 				.amount(paymentEntity.getAmount())
+				.createdAt(payment.getCreatedAt())
+				.status(paymentEntity.getStatus())
+				.merchantReference(paymentEntity.getMerchantReference())
+				.createdAt(paymentEntity.getCreatedAt())
 				.build();
 				
 		
@@ -65,6 +73,8 @@ public class PaymentServiceImpl implements PaymentService{
 			.merchantReference(payment.getMerchantReference())
 			.amount(payment.getAmount())
 			.currency(payment.getCurrency())
+			.paymentMethod(payment.getPaymentMethod())
+			.status(payment.getStatus())
 			.createdAt(payment.getCreatedAt())
 			.build();
 		
