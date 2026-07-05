@@ -4,10 +4,13 @@ import java.util.UUID;
 
 import com.example.payment_service.dto.PaymentRequest;
 import com.example.payment_service.dto.PaymentResponse;
+import com.example.payment_service.dto.UpdatePaymentStatusRequest;
 
 public interface PaymentService {
 
 	PaymentResponse createPayment(PaymentRequest request);
 	
 	PaymentResponse getPayment(UUID paymentReference);
+	
+	void updatePaymentStatus(UUID paymentReference, UpdatePaymentStatusRequest request);
 }
