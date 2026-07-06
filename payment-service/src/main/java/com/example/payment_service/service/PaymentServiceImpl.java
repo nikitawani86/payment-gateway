@@ -12,12 +12,15 @@ import com.example.payment_service.dto.ApiResponse;
 import com.example.payment_service.dto.MerchantResponse;
 import com.example.payment_service.dto.PaymentRequest;
 import com.example.payment_service.dto.PaymentResponse;
+import com.example.payment_service.dto.UpdatePaymentStatusRequest;
 import com.example.payment_service.entity.PaymentEntity;
 import com.example.payment_service.entity.repository.PaymentRepository;
+import com.example.payment_service.exceptions.InvalidPaymentStatusTransitionException;
 import com.example.payment_service.exceptions.MerchantBlockedException;
 import com.example.payment_service.exceptions.MerchantInactiveException;
 import com.example.payment_service.exceptions.PaymentNotFoundException;
 import com.example.payment_service.feign.MerchantClient;
+import com.example.payment_service.validator.PaymentStatusValidator;
 
 import lombok.AllArgsConstructor;
 
@@ -28,6 +31,7 @@ public class PaymentServiceImpl implements PaymentService{
 	private final MerchantClient merchantclient;
 	private final PaymentRepository repo;
 
+	private final PaymentStatusValidator validator = new PaymentStatusValidator();
 	@Override
 	public PaymentResponse createPayment(PaymentRequest request) {
 		// TODO Auto-generated method stub
@@ -82,6 +86,31 @@ public class PaymentServiceImpl implements PaymentService{
 			
 			
 				
+	}
+	
+
+	@Override
+	public PaymentResponse updatePaymentStatus(UUID paymentReference, UpdatePaymentStatusRequest request) {
+		// TODO Auto-generated method stub
+PaymentEntity payment = repo.findByPaymentReference(paymentReference).orElseThrow(() -> new PaymentNotFoundException("Payment Not Found" +paymentReference));
+		
+		if(validator.isTransitionAllowed(payment.getStatus(), request.getStatus())) {
+			throw new InvalidPaymentStatusTransitionException("Cannot transition from " +payment.getStatus() + "to " +request.getStatus());
+			
+		}
+		payment.setStatus(request.getStatus());
+			
+		PaymentEntity updatePayment = repo.save(payment);
+		
+		return PaymentResponse.builder()
+				.paymentReference(updatePayment.getPaymentReference())
+				.merchantReference(updatePayment.getMerchantReference())
+				.amount(updatePayment.getAmount())
+				.currency(updatePayment.getCurrency())
+				.status(updatePayment.getStatus())
+				.createdAt(updatePayment.getCreatedAt())
+				.build();
+		
 	}
 
 }

@@ -39,6 +39,19 @@ public class GlobalExceptionHandle {
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
 	}
 	
+	
+	@ExceptionHandler(InvalidPaymentStatusTransitionException .class)
+	public ResponseEntity<ApiResponse<Void>> handleInvalidPaymentStatusTransitionException (InvalidPaymentStatusTransitionException  exception){
+		
+		ApiResponse<Void> response = ApiResponse.<Void>builder()
+				.success(false)
+				.message(exception.getMessage())
+				.data(null)
+				.timestamp(LocalDateTime.now())
+				.build();
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+	}
+	
 	@ExceptionHandler(MerchantInactiveException.class)
 	public ResponseEntity<ApiResponse<Void>> handleMerchantInactiveException(MerchantInactiveException exception){
 		

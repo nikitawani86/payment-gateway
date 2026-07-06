@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.payment_service.dto.ApiResponse;
 import com.example.payment_service.dto.PaymentRequest;
 import com.example.payment_service.dto.PaymentResponse;
+import com.example.payment_service.dto.UpdatePaymentStatusRequest;
 import com.example.payment_service.service.PaymentService;
 import com.example.payment_service.service.PaymentServiceImpl;
 
@@ -28,30 +29,21 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
 public class PaymentController {
-	
+
 	private final PaymentService service;
-	
+
 	@PostMapping
-	public  ResponseEntity<ApiResponse<PaymentResponse>> createPayment(@Valid @RequestBody PaymentRequest request){
-		
+	public ResponseEntity<ApiResponse<PaymentResponse>> createPayment(@Valid @RequestBody PaymentRequest request) {
+
 		PaymentResponse Response = service.createPayment(request);
-		
-		ApiResponse<PaymentResponse> apiResponse = 
-				ApiResponse.<PaymentResponse>builder()
-				.success(true)
-			     .message("Payement Successful")
-				.data(Response)
-				.timestamp(LocalDateTime.now())
-				.build();
-				
-				
-			return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
-				
-			
-				
-		
+
+		ApiResponse<PaymentResponse> apiResponse = ApiResponse.<PaymentResponse>builder().success(true)
+				.message("Payement Successful").data(Response).timestamp(LocalDateTime.now()).build();
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+
 	}
-	
+
 	@GetMapping("{paymentReference}")
 	public ResponseEntity<ApiResponse<PaymentResponse>> getPayment(@PathVariable UUID paymentReference){
 		PaymentResponse response = service.getPayment(paymentReference);
@@ -64,6 +56,25 @@ public class PaymentController {
 				.build();
 		
 		return ResponseEntity.ok(res);
+		
+	}
+
+	// API for updating the Payment Status
+	public ResponseEntity<ApiResponse<PaymentResponse>> updatePaymentStatus(@PathVariable UUID paymentReference , 
+			@Valid @RequestBody UpdatePaymentStatusRequest request){
+		
+		PaymentResponse response = service.updatePaymentStatus(paymentReference, request);
+		
+		ApiResponse<PaymentResponse> apiResponse  = 
+				ApiResponse .<PaymentResponse>builder()
+							.success(true)
+							.message("Payment Status Updated Successfully")
+							.data(response)
+							.timestamp(LocalDateTime.now())
+							.build();
+		
+		return ResponseEntity.ok(apiResponse);
+							
 		
 	}
 
