@@ -12,4 +12,6 @@ import com.example.merchant_service.merchant_service.entity.MerchantEntity;
 public interface MerchantRepository  extends JpaRepository<MerchantEntity, Long>{
 	Optional<MerchantEntity> findByMerchantReference(UUID merchantReference);
 	boolean existsByEmail(String email);
+	
+	boolean existsByEmailAndMerchantReferenceNot(String email,UUID merchantReference);
 }

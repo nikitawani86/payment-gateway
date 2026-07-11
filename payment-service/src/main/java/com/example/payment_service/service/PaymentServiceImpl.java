@@ -92,9 +92,9 @@ public class PaymentServiceImpl implements PaymentService{
 	@Override
 	public PaymentResponse updatePaymentStatus(UUID paymentReference, UpdatePaymentStatusRequest request) {
 		// TODO Auto-generated method stub
-PaymentEntity payment = repo.findByPaymentReference(paymentReference).orElseThrow(() -> new PaymentNotFoundException("Payment Not Found" +paymentReference));
+PaymentEntity payment = repo.findByPaymentReference(paymentReference).orElseThrow(() -> new PaymentNotFoundException("Resource doesn't exists"));
 		
-		if(validator.isTransitionAllowed(payment.getStatus(), request.getStatus())) {
+		if(!validator.isTransitionAllowed(payment.getStatus(), request.getStatus())) {
 			throw new InvalidPaymentStatusTransitionException("Cannot transition from " +payment.getStatus() + "to " +request.getStatus());
 			
 		}

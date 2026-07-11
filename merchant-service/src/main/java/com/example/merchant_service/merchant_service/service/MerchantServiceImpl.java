@@ -1,5 +1,6 @@
 package com.example.merchant_service.merchant_service.service;
 
+import java.io.ObjectInputFilter.Status;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -7,11 +8,13 @@ import org.springframework.stereotype.Service;
 import com.example.merchant_service.merchant_service.domains.MerchantStatus;
 import com.example.merchant_service.merchant_service.dto.CreateMerchantRequest;
 import com.example.merchant_service.merchant_service.dto.CreateMerchantResponse;
+import com.example.merchant_service.merchant_service.dto.UpdateMerchantRequest;
 import com.example.merchant_service.merchant_service.entity.MerchantEntity;
 import com.example.merchant_service.merchant_service.exception.MerchantAlreadyExistsException;
 import com.example.merchant_service.merchant_service.exception.MerchantNotFoundException;
 import com.example.merchant_service.merchant_service.repository.MerchantRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -49,6 +52,36 @@ public class MerchantServiceImpl implements MerchantService {
 				.email(entity.getEmail())
 				.status(entity.getStatus().name())
 				.build();
-	}
 
+	
+	//Update the Merchant 
+	
+	
+	
+
+}
+
+	@Override
+	@Transactional
+	public CreateMerchantResponse updateMerchant(UpdateMerchantRequest request, UUID merchantReference) {
+		// TODO Auto-generated method stub
+		MerchantEntity merchant = repo.findByMerchantReference(merchantReference).orElseThrow(() -> new MerchantNotFoundException("Merchant Not Found with id : " + merchantReference));
+		if(request.getEmail()!=null &&  !request.getEmail().isBlank() && repo.existsByEmailAndMerchantReferenceNot(request.getEmail(), merchantReference)) {
+			throw new MerchantAlreadyExistsException("Email Already Exists");
+		}else {
+			merchant.setEmail(request.getEmail());
+		}
+		if(request.getMerchantName()!=null) {
+			merchant.setMerchantName(request.getMerchantName());
+		}
+		 
+		MerchantEntity update = repo.save(merchant);
+		
+		return CreateMerchantResponse.builder()
+				.merchantReference(update.getMerchantReference())
+				.merchantName(update.getMerchantName())
+				.email(update.getEmail())
+				.status(update.getStatus().name())
+				.build();
+	}
 }

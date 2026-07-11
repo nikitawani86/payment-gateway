@@ -20,7 +20,7 @@ public class GlobalExceptionHandle {
 		
 		ApiResponse<Void> response = ApiResponse.<Void>builder()
 				.success(false)
-				.message("Resource doesn't exists")
+				.message(exception.getMessage())
 				.data(null)
 				.timestamp(LocalDateTime.now())
 				.build();

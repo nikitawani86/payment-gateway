@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.merchant_service.merchant_service.dto.ApiResponse;
 import com.example.merchant_service.merchant_service.dto.CreateMerchantRequest;
 import com.example.merchant_service.merchant_service.dto.CreateMerchantResponse;
+import com.example.merchant_service.merchant_service.dto.UpdateMerchantRequest;
 import com.example.merchant_service.merchant_service.service.MerchantService;
 
 import jakarta.validation.ReportAsSingleViolation;
@@ -59,5 +60,22 @@ public class MerchantController {
 				.build();
 		
 		return ResponseEntity.ok(apiResponse);
+	}
+	
+	//Update the Merchant
+	public ResponseEntity<ApiResponse<CreateMerchantResponse>> updateMerchant(@PathVariable UUID merchantReference, @Valid @RequestBody UpdateMerchantRequest request ){
+		
+		CreateMerchantResponse response = merchantService.updateMerchant(request, merchantReference);
+		
+		ApiResponse<CreateMerchantResponse> apiResponse = 
+				ApiResponse .<CreateMerchantResponse>builder()
+				.success(true)
+				.message("Merchant Updated Successfully")
+				.data(response)
+				.timestamp(LocalDateTime.now())
+				.build();
+		
+		return ResponseEntity.ok(apiResponse);
+		
 	}
 }
