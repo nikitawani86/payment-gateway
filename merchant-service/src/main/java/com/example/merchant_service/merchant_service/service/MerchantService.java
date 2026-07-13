@@ -14,6 +14,8 @@ public interface MerchantService {
 	
 	CreateMerchantResponse updateMerchant(UpdateMerchantRequest request , UUID merchantReference);
 	
+	CreateMerchantResponse deleteMerchant(UUID merchantReference);
+	
 	
 
 }

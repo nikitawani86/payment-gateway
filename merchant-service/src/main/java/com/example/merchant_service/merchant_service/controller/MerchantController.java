@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,4 +81,21 @@ public class MerchantController {
 		return ResponseEntity.ok(apiResponse);
 		
 	}
+	
+	//Delete the MerchantS
+	@DeleteMapping("{merchantRefernce}")
+	public ResponseEntity<ApiResponse<CreateMerchantResponse>> deleteMerchant(@PathVariable UUID merchantRefernce){
+		CreateMerchantResponse response = merchantService.deleteMerchant(merchantRefernce);
+		
+		ApiResponse<CreateMerchantResponse> apiResponse = 
+				ApiResponse.<CreateMerchantResponse>builder()
+				.success(true)
+				.message("Merchant Deleted Successfully")
+				.data(response)
+				.timestamp(LocalDateTime.now())
+				.build();
+		
+		return ResponseEntity.ok(apiResponse);
+	}
+	
 }
