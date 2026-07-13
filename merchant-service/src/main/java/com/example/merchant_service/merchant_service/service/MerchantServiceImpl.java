@@ -79,12 +79,14 @@ public class MerchantServiceImpl implements MerchantService {
 
 	// Delete Merchant
 	@Override
+	@Transactional
 	public CreateMerchantResponse deleteMerchant(UUID merchantReference) {
 		// TODO Auto-generated method stub
 		MerchantEntity entity = repo.findByMerchantReference(merchantReference)
 				.orElseThrow(() -> new MerchantNotFoundException("Merchant Not Found with id: " + merchantReference));
-		
+		if(entity.getStatus()!= MerchantStatus.INACTIVE) {
 		entity.setStatus(MerchantStatus.INACTIVE);
+		}
 		
 		
 		MerchantEntity delete = repo.save(entity);

@@ -83,14 +83,14 @@ public class MerchantController {
 	}
 	
 	//Delete the MerchantS
-	@DeleteMapping("{merchantRefernce}")
-	public ResponseEntity<ApiResponse<CreateMerchantResponse>> deleteMerchant(@PathVariable UUID merchantRefernce){
-		CreateMerchantResponse response = merchantService.deleteMerchant(merchantRefernce);
+	@DeleteMapping("{merchantReference}")
+	public ResponseEntity<ApiResponse<CreateMerchantResponse>> deleteMerchant(@PathVariable UUID merchantReference){
+		CreateMerchantResponse response = merchantService.deleteMerchant(merchantReference);
 		
 		ApiResponse<CreateMerchantResponse> apiResponse = 
 				ApiResponse.<CreateMerchantResponse>builder()
 				.success(true)
-				.message("Merchant Deleted Successfully")
+				.message("Merchant Deactivated Successfully")
 				.data(response)
 				.timestamp(LocalDateTime.now())
 				.build();
