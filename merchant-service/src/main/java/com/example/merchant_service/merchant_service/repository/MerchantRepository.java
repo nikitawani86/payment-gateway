@@ -3,9 +3,12 @@ package com.example.merchant_service.merchant_service.repository;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.example.merchant_service.merchant_service.domains.MerchantStatus;
 import com.example.merchant_service.merchant_service.entity.MerchantEntity;
 
 @Repository
@@ -14,4 +17,6 @@ public interface MerchantRepository  extends JpaRepository<MerchantEntity, Long>
 	boolean existsByEmail(String email);
 	
 	boolean existsByEmailAndMerchantReferenceNot(String email,UUID merchantReference);
+	
+	Page<MerchantEntity> findByStatus (MerchantStatus status,Pageable pageable);
 }

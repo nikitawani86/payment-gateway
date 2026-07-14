@@ -96,4 +96,6 @@ public class MerchantServiceImpl implements MerchantService {
 				.status(delete.getStatus().name())
 				.build();
 	}
+	
+	
 }
