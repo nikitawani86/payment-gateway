@@ -3,6 +3,10 @@ package com.example.merchant_service.merchant_service.service;
 import java.io.ObjectInputFilter.Status;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.merchant_service.merchant_service.domains.MerchantStatus;
@@ -95,6 +99,49 @@ public class MerchantServiceImpl implements MerchantService {
 				.email(delete.getEmail())
 				.status(delete.getStatus().name())
 				.build();
+	}
+	
+	//Get  list of all Merchants
+	public Page<CreateMerchantResponse> getAllMerchants(int page , int size, String SortBy,String direction,MerchantStatus status){
+		
+		
+		if(page < 0) {
+			throw new IllegalArgumentException("Page number cannot be negative");
+		}
+		if(size <= 0 || size>100) {
+			throw new IllegalArgumentException("Page size must be between 1 and 100");
+		}
+		
+		//create sort object
+		Sort sort = Sort.by(direction, SortBy);
+		
+		//create pageable object
+		Pageable pageable = PageRequest.of(page, size,sort);
+		
+		//Fetch data
+		Page<MerchantEntity> merchants;
+		
+		if(status != null) {
+			merchants = repo.findByStatus(status, pageable);
+		}else {
+			merchants = repo.findAll(pageable);
+		}
+		
+		return merchants.map(this :: mapToResponse);
+		
+		
+	}
+	
+	/** 
+	 * Maps MerchantEntity to CreateMerchantREsponse
+	 */
+	private CreateMerchantResponse mapToResponse(MerchantEntity merchant) {
+		return CreateMerchantResponse.builder()
+				.merchantReference(merchant.getMerchantReference())
+				.merchantName(merchant.getMerchantName())
+				.email(merchant.getEmail())
+				.status(merchant.getStatus().name())
+			    .build();
 	}
 	
 	

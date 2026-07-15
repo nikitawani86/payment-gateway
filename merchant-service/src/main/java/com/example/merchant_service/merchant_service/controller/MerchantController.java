@@ -3,6 +3,8 @@ package com.example.merchant_service.merchant_service.controller;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,8 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.merchant_service.merchant_service.domains.MerchantStatus;
 import com.example.merchant_service.merchant_service.dto.ApiResponse;
 import com.example.merchant_service.merchant_service.dto.CreateMerchantRequest;
 import com.example.merchant_service.merchant_service.dto.CreateMerchantResponse;
@@ -96,6 +100,37 @@ public class MerchantController {
 				.build();
 		
 		return ResponseEntity.ok(apiResponse);
+	}
+	
+	//Get all Merchants
+	@GetMapping
+	public ResponseEntity<ApiResponse<Page<CreateMerchantResponse>>> getAllMerchants(
+			
+			@RequestParam(defaultValue = "0")
+			int page,
+			
+			@RequestParam(defaultValue = "10")
+			int size,
+			
+			@RequestParam(defaultValue = "merchantName")
+			String sortBy,
+			
+			@RequestParam(defaultValue = "ASC")
+			Sort.Direction direction,
+			
+			@RequestParam(required = false)
+			MerchantStatus   status )
+	
+	{
+		Page<CreateMerchantResponse> merchants = merchantService.getAllMerchants(page, size, sortBy, sortBy, status);
+		
+		ApiResponse<Page<CreateMerchantResponse>> response = ApiResponse.<Page<CreateMerchantResponse>> builder()
+															.success(true)
+															.message("Merchants Fetched Successfully")
+															.data(merchants)
+															.timestamp(LocalDateTime.now())
+															.build();
+		return ResponseEntity.ok(response);
 	}
 	
 }
