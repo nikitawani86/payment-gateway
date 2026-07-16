@@ -14,7 +14,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateMerchantResponse {
+public class MerchantResponse {
 	
 	private UUID merchantReference;
 	private String merchantName;

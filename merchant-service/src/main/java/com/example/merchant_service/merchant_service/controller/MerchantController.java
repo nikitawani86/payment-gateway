@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.merchant_service.merchant_service.domains.MerchantStatus;
 import com.example.merchant_service.merchant_service.dto.ApiResponse;
 import com.example.merchant_service.merchant_service.dto.CreateMerchantRequest;
-import com.example.merchant_service.merchant_service.dto.CreateMerchantResponse;
+import com.example.merchant_service.merchant_service.dto.MerchantResponse;
 import com.example.merchant_service.merchant_service.dto.UpdateMerchantRequest;
 import com.example.merchant_service.merchant_service.service.MerchantService;
 
@@ -37,10 +37,10 @@ public class MerchantController {
 	
 	//Create Merchant API
 	@PostMapping
-	public ResponseEntity<ApiResponse<CreateMerchantResponse>> createMerchant(@RequestBody @Valid CreateMerchantRequest request){
-		CreateMerchantResponse response = merchantService.createMerchant(request);
-		 ApiResponse<CreateMerchantResponse> apiresponse = 
-				 ApiResponse.<CreateMerchantResponse>builder()
+	public ResponseEntity<ApiResponse<MerchantResponse>> createMerchant(@RequestBody @Valid CreateMerchantRequest request){
+		MerchantResponse response = merchantService.createMerchant(request);
+		 ApiResponse<MerchantResponse> apiresponse = 
+				 ApiResponse.<MerchantResponse>builder()
 				 .success(true)
 				 .message("Merchant Created Successfully")
 				 .data(response)
@@ -54,11 +54,11 @@ public class MerchantController {
 	
 	//Get For Merchant 
 	@GetMapping("{merchantReference}")
-	public ResponseEntity<ApiResponse<CreateMerchantResponse>> getMerchant(@PathVariable UUID merchantReference){
-		CreateMerchantResponse respone = merchantService.getMerchant(merchantReference);
+	public ResponseEntity<ApiResponse<MerchantResponse>> getMerchant(@PathVariable UUID merchantReference){
+		MerchantResponse respone = merchantService.getMerchant(merchantReference);
 		
-		ApiResponse<CreateMerchantResponse> apiResponse = 
-				ApiResponse .<CreateMerchantResponse>builder()
+		ApiResponse<MerchantResponse> apiResponse = 
+				ApiResponse .<MerchantResponse>builder()
 				.success(true)
 				.message("Merchant Fetched Successfully")
 				.data(respone)
@@ -70,12 +70,12 @@ public class MerchantController {
 	
 	//Update the Merchant
 	@PutMapping("{merchantReference}")
-	public ResponseEntity<ApiResponse<CreateMerchantResponse>> updateMerchant(@PathVariable UUID merchantReference, @Valid @RequestBody UpdateMerchantRequest request ){
+	public ResponseEntity<ApiResponse<MerchantResponse>> updateMerchant(@PathVariable UUID merchantReference, @Valid @RequestBody UpdateMerchantRequest request ){
 		
-		CreateMerchantResponse response = merchantService.updateMerchant(request, merchantReference);
+		MerchantResponse response = merchantService.updateMerchant(request, merchantReference);
 		
-		ApiResponse<CreateMerchantResponse> apiResponse = 
-				ApiResponse .<CreateMerchantResponse>builder()
+		ApiResponse<MerchantResponse> apiResponse = 
+				ApiResponse .<MerchantResponse>builder()
 				.success(true)
 				.message("Merchant Updated Successfully")
 				.data(response)
@@ -88,11 +88,11 @@ public class MerchantController {
 	
 	//Delete the MerchantS
 	@DeleteMapping("{merchantReference}")
-	public ResponseEntity<ApiResponse<CreateMerchantResponse>> deleteMerchant(@PathVariable UUID merchantReference){
-		CreateMerchantResponse response = merchantService.deleteMerchant(merchantReference);
+	public ResponseEntity<ApiResponse<MerchantResponse>> deleteMerchant(@PathVariable UUID merchantReference){
+		MerchantResponse response = merchantService.deleteMerchant(merchantReference);
 		
-		ApiResponse<CreateMerchantResponse> apiResponse = 
-				ApiResponse.<CreateMerchantResponse>builder()
+		ApiResponse<MerchantResponse> apiResponse = 
+				ApiResponse.<MerchantResponse>builder()
 				.success(true)
 				.message("Merchant Deactivated Successfully")
 				.data(response)
@@ -104,7 +104,7 @@ public class MerchantController {
 	
 	//Get all Merchants
 	@GetMapping
-	public ResponseEntity<ApiResponse<Page<CreateMerchantResponse>>> getAllMerchants(
+	public ResponseEntity<ApiResponse<Page<MerchantResponse>>> getAllMerchants(
 			
 			@RequestParam(defaultValue = "0")
 			int page,
@@ -122,9 +122,9 @@ public class MerchantController {
 			MerchantStatus   status )
 	
 	{
-		Page<CreateMerchantResponse> merchants = merchantService.getAllMerchants(page, size, sortBy, sortBy, status);
+		Page<MerchantResponse> merchants = merchantService.getAllMerchants(page, size, sortBy, sortBy, status);
 		
-		ApiResponse<Page<CreateMerchantResponse>> response = ApiResponse.<Page<CreateMerchantResponse>> builder()
+		ApiResponse<Page<MerchantResponse>> response = ApiResponse.<Page<MerchantResponse>> builder()
 															.success(true)
 															.message("Merchants Fetched Successfully")
 															.data(merchants)

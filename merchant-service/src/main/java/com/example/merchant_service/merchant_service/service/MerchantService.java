@@ -6,20 +6,20 @@ import org.springframework.data.domain.Page;
 
 import com.example.merchant_service.merchant_service.domains.MerchantStatus;
 import com.example.merchant_service.merchant_service.dto.CreateMerchantRequest;
-import com.example.merchant_service.merchant_service.dto.CreateMerchantResponse;
+import com.example.merchant_service.merchant_service.dto.MerchantResponse;
 import com.example.merchant_service.merchant_service.dto.UpdateMerchantRequest;
 
 public interface MerchantService {
 	
-	CreateMerchantResponse createMerchant(CreateMerchantRequest request);
+	MerchantResponse createMerchant(CreateMerchantRequest request);
 		
-	CreateMerchantResponse getMerchant(UUID merchantReference);
+	MerchantResponse getMerchant(UUID merchantReference);
 	
-	CreateMerchantResponse updateMerchant(UpdateMerchantRequest request , UUID merchantReference);
+	MerchantResponse updateMerchant(UpdateMerchantRequest request , UUID merchantReference);
 	
-	CreateMerchantResponse deleteMerchant(UUID merchantReference);
+	MerchantResponse deleteMerchant(UUID merchantReference);
 	
-	Page<CreateMerchantResponse> getAllMerchants(int page , int size, String SortBy,String direction,MerchantStatus status);
+	Page<MerchantResponse> getAllMerchants(int page , int size, String SortBy,String direction,MerchantStatus status);
 	
 	
 

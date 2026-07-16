@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service;
 
 import com.example.merchant_service.merchant_service.domains.MerchantStatus;
 import com.example.merchant_service.merchant_service.dto.CreateMerchantRequest;
-import com.example.merchant_service.merchant_service.dto.CreateMerchantResponse;
+import com.example.merchant_service.merchant_service.dto.MerchantResponse;
 import com.example.merchant_service.merchant_service.dto.UpdateMerchantRequest;
 import com.example.merchant_service.merchant_service.entity.MerchantEntity;
 import com.example.merchant_service.merchant_service.exception.MerchantAlreadyExistsException;
 import com.example.merchant_service.merchant_service.exception.MerchantNotFoundException;
+import com.example.merchant_service.merchant_service.mapper.MerchantMapper;
 import com.example.merchant_service.merchant_service.repository.MerchantRepository;
 
 import jakarta.transaction.Transactional;
@@ -26,9 +27,11 @@ import lombok.RequiredArgsConstructor;
 public class MerchantServiceImpl implements MerchantService {
 
 	private final MerchantRepository repo;
+	
+	private final MerchantMapper merchantMapper;
 
 	@Override
-	public CreateMerchantResponse createMerchant(CreateMerchantRequest request) {
+	public MerchantResponse createMerchant(CreateMerchantRequest request) {
 		// TODO Auto-generated method stub
 		if (repo.existsByEmail(request.getEmail())) {
 			throw new MerchantAlreadyExistsException("Merchant Already Exists with Email: " + request.getEmail());
@@ -40,19 +43,15 @@ public class MerchantServiceImpl implements MerchantService {
 
 		MerchantEntity savedMerchant = repo.save(entity);
 
-		return CreateMerchantResponse.builder().merchantReference(savedMerchant.getMerchantReference())
-				.merchantName(savedMerchant.getMerchantName()).email(savedMerchant.getEmail())
-				.status(savedMerchant.getStatus().name()).build();
+		return merchantMapper.toResponse(savedMerchant);
 	}
 
 	@Override
-	public CreateMerchantResponse getMerchant(UUID merchantReference) {
+	public MerchantResponse getMerchant(UUID merchantReference) {
 		// TODO Auto-generated method stub
 		MerchantEntity entity = repo.findByMerchantReference(merchantReference)
 				.orElseThrow(() -> new MerchantNotFoundException("Merchant Not Found with id: " + merchantReference));
-		return CreateMerchantResponse.builder().merchantReference(entity.getMerchantReference())
-				.merchantName(entity.getMerchantName()).email(entity.getEmail()).status(entity.getStatus().name())
-				.build();
+		return merchantMapper.toResponse(entity);
 
 		// Update the Merchant
 
@@ -60,7 +59,7 @@ public class MerchantServiceImpl implements MerchantService {
 
 	@Override
 	@Transactional
-	public CreateMerchantResponse updateMerchant(UpdateMerchantRequest request, UUID merchantReference) {
+	public MerchantResponse updateMerchant(UpdateMerchantRequest request, UUID merchantReference) {
 		// TODO Auto-generated method stub
 		MerchantEntity merchant = repo.findByMerchantReference(merchantReference)
 				.orElseThrow(() -> new MerchantNotFoundException("Merchant Not Found with id : " + merchantReference));
@@ -76,15 +75,13 @@ public class MerchantServiceImpl implements MerchantService {
 
 		MerchantEntity update = repo.save(merchant);
 
-		return CreateMerchantResponse.builder().merchantReference(update.getMerchantReference())
-				.merchantName(update.getMerchantName()).email(update.getEmail()).status(update.getStatus().name())
-				.build();
+		return merchantMapper.toResponse(update);
 	}
 
 	// Delete Merchant
 	@Override
 	@Transactional
-	public CreateMerchantResponse deleteMerchant(UUID merchantReference) {
+	public MerchantResponse deleteMerchant(UUID merchantReference) {
 		// TODO Auto-generated method stub
 		MerchantEntity entity = repo.findByMerchantReference(merchantReference)
 				.orElseThrow(() -> new MerchantNotFoundException("Merchant Not Found with id: " + merchantReference));
@@ -94,15 +91,11 @@ public class MerchantServiceImpl implements MerchantService {
 		
 		
 		MerchantEntity delete = repo.save(entity);
-		return CreateMerchantResponse.builder().merchantReference(delete.getMerchantReference())
-				.merchantName(delete.getMerchantName())
-				.email(delete.getEmail())
-				.status(delete.getStatus().name())
-				.build();
+		return merchantMapper.toResponse(delete);
 	}
 	
 	//Get  list of all Merchants
-	public Page<CreateMerchantResponse> getAllMerchants(int page , int size, String SortBy,String direction,MerchantStatus status){
+	public Page<MerchantResponse> getAllMerchants(int page , int size, String SortBy,String direction,MerchantStatus status){
 		
 		
 		if(page < 0) {
@@ -135,8 +128,8 @@ public class MerchantServiceImpl implements MerchantService {
 	/** 
 	 * Maps MerchantEntity to CreateMerchantREsponse
 	 */
-	private CreateMerchantResponse mapToResponse(MerchantEntity merchant) {
-		return CreateMerchantResponse.builder()
+	private MerchantResponse mapToResponse(MerchantEntity merchant) {
+		return MerchantResponse.builder()
 				.merchantReference(merchant.getMerchantReference())
 				.merchantName(merchant.getMerchantName())
 				.email(merchant.getEmail())
