@@ -76,6 +76,7 @@ public class GlobalExceptionHandle {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 	}
 	
+	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiResponse<Void>> handlerException(Exception ex){
 		ApiResponse<Void> response=  ApiResponse.<Void>builder().success(false).message("Internal Server Error").data(null).timestamp(LocalDateTime.now()).build();
@@ -93,5 +94,11 @@ public class GlobalExceptionHandle {
 				.message("Validation failed").data(errors).timestamp(LocalDateTime.now()).build();
 		return ResponseEntity.badRequest().body(response);
 
+	}
+	
+	@ExceptionHandler(InvalidRefundException.class)
+	public ResponseEntity<ApiResponse<Void>> handlerInvalidRefundException(Exception ex){
+		ApiResponse<Void> response=  ApiResponse.<Void>builder().success(false).message("Internal Server Error").data(null).timestamp(LocalDateTime.now()).build();
+		 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 	}
 }

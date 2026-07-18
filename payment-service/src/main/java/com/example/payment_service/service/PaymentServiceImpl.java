@@ -16,6 +16,7 @@ import com.example.payment_service.dto.UpdatePaymentStatusRequest;
 import com.example.payment_service.entity.PaymentEntity;
 import com.example.payment_service.entity.repository.PaymentRepository;
 import com.example.payment_service.exceptions.InvalidPaymentStatusTransitionException;
+import com.example.payment_service.exceptions.InvalidRefundException;
 import com.example.payment_service.exceptions.MerchantBlockedException;
 import com.example.payment_service.exceptions.MerchantInactiveException;
 import com.example.payment_service.exceptions.PaymentNotFoundException;
@@ -110,6 +111,30 @@ PaymentEntity payment = repo.findByPaymentReference(paymentReference).orElseThro
 				.status(updatePayment.getStatus())
 				.createdAt(updatePayment.getCreatedAt())
 				.build();
+		
+	}
+
+	@Override
+	public PaymentResponse RefundPayments(UUID paymentRefernce) {
+		// TODO Auto-generated method stub
+		
+	PaymentEntity payment = repo.findByPaymentReference(paymentRefernce).orElseThrow(() -> new PaymentNotFoundException("Resource doesn't exists"));
+	if(payment.getStatus().equals(PaymentStatus.CAPTURED) || payment.getStatus().equals(PaymentStatus.SETTLED)) {
+		payment.setStatus(PaymentStatus.REFUNDED);
+	}else {
+		throw new InvalidRefundException("Refund is not completed");
+	}
+	PaymentEntity refund  = repo.save(payment);
+	
+	return PaymentResponse.builder()
+			.paymentReference(refund.getPaymentReference())
+			.amount(refund.getAmount())
+			.currency(refund.getCurrency())
+			.status(refund.getStatus())
+			.createdAt(refund.getCreatedAt())
+			.build();
+	
+		
 		
 	}
 

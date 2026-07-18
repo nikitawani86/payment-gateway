@@ -13,4 +13,6 @@ public interface PaymentService {
 	PaymentResponse getPayment(UUID paymentReference);
 	
 	PaymentResponse updatePaymentStatus(UUID paymentReference, UpdatePaymentStatusRequest request);
+	
+	PaymentResponse RefundPayments(UUID paymentRefernce);
 }
