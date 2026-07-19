@@ -49,6 +49,9 @@ public class RefundEntity {
 	@Column(precision = 19 ,scale = 2,name = "amount",nullable = false)
 	private BigDecimal amount;
 	
+	@Column(name = "reason" , nullable = false)
+	private String reason;
+	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status" , nullable = false)
 	private RefundStatus status;

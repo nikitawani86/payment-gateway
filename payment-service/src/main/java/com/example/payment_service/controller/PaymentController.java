@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.payment_service.dto.ApiResponse;
+import com.example.payment_service.dto.PartialRefundRequest;
 import com.example.payment_service.dto.PaymentRequest;
 import com.example.payment_service.dto.PaymentResponse;
 import com.example.payment_service.dto.RefundResponse;
@@ -47,54 +48,55 @@ public class PaymentController {
 	}
 
 	@GetMapping("{paymentReference}")
-	public ResponseEntity<ApiResponse<PaymentResponse>> getPayment(@PathVariable UUID paymentReference){
+	public ResponseEntity<ApiResponse<PaymentResponse>> getPayment(@PathVariable UUID paymentReference) {
 		PaymentResponse response = service.getPayment(paymentReference);
-		ApiResponse<PaymentResponse> res = 
-				ApiResponse.<PaymentResponse>builder()
-				.success(true)
-				.message("Payment Fetched Successfully")
-				.data(response)
-				.timestamp(LocalDateTime.now())
-				.build();
-		
+		ApiResponse<PaymentResponse> res = ApiResponse.<PaymentResponse>builder().success(true)
+				.message("Payment Fetched Successfully").data(response).timestamp(LocalDateTime.now()).build();
+
 		return ResponseEntity.ok(res);
-		
+
 	}
 
 	// API for updating the Payment Status
 	@PutMapping("{paymentReference}")
-	public ResponseEntity<ApiResponse<PaymentResponse>> updatePaymentStatus(@PathVariable UUID paymentReference , 
-			@Valid @RequestBody UpdatePaymentStatusRequest request){
-		
+	public ResponseEntity<ApiResponse<PaymentResponse>> updatePaymentStatus(@PathVariable UUID paymentReference,
+			@Valid @RequestBody UpdatePaymentStatusRequest request) {
+
 		PaymentResponse response = service.updatePaymentStatus(paymentReference, request);
-		
-		ApiResponse<PaymentResponse> apiResponse  = 
-				ApiResponse .<PaymentResponse>builder()
-							.success(true)
-							.message("Payment Status Updated Successfully")
-							.data(response)
-							.timestamp(LocalDateTime.now())
-							.build();
-		
+
+		ApiResponse<PaymentResponse> apiResponse = ApiResponse.<PaymentResponse>builder().success(true)
+				.message("Payment Status Updated Successfully").data(response).timestamp(LocalDateTime.now()).build();
+
 		return ResponseEntity.ok(apiResponse);
-							
-		
+
 	}
-	
-	
-	//Create Refund API
+
+	// Create Refund API
 	@PostMapping("/refund/{paymentReference}")
-	public ResponseEntity<ApiResponse<RefundResponse>> createRefund(@PathVariable UUID paymentReference){
+	public ResponseEntity<ApiResponse<RefundResponse>> createRefund(@PathVariable UUID paymentReference) {
 		RefundResponse response = service.RefundPayments(paymentReference);
+
+		ApiResponse<RefundResponse> apiResponse = ApiResponse.<RefundResponse>builder().success(true)
+				.message("Refund is successful").data(response).timestamp(LocalDateTime.now()).build();
+
+		return ResponseEntity.ok(apiResponse);
+	}
+
+	// Create Partial Refund
+	@PostMapping("refund/{paymentReference}/partialRefund")
+	public ResponseEntity<ApiResponse<RefundResponse>> createPartialRefund(@PathVariable UUID paymentReference,
+			@Valid @RequestBody PartialRefundRequest request) {
 		
-		ApiResponse<RefundResponse> apiResponse = 
-				ApiResponse .<RefundResponse>builder()
+		RefundResponse response = service.partialRefund(paymentReference, request);
+		
+		ApiResponse<RefundResponse> apiResponse = ApiResponse.<RefundResponse>builder()
 				.success(true)
-				.message("Refund is successful")
+				.message("Refund is Successful")
 				.data(response)
 				.timestamp(LocalDateTime.now())
 				.build();
 		
 		return ResponseEntity.ok(apiResponse);
+
 	}
 }
