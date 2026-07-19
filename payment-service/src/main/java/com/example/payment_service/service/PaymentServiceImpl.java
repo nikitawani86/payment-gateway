@@ -121,6 +121,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 		RefundEntity refund = RefundEntity.builder().refundReference(UUID.randomUUID())
 				.paymentReference(updatedPayment.getPaymentReference()).amount(updatedPayment.getAmount())
+				.reason("OK")
 				.status(RefundStatus.SUCCESS).build();
 
 		RefundEntity savedRefund = refundRepo.save(refund);

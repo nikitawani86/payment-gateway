@@ -24,6 +24,6 @@ public class PartialRefundRequest {
 	@Digits(integer = 17 , fraction = 2)
 	private BigDecimal amount;
 	
-	@NotBlank
+	
 	private String reason;
 }
