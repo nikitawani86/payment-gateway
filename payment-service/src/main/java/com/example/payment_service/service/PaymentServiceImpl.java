@@ -8,21 +8,26 @@ import org.springframework.stereotype.Service;
 
 import com.example.payment_service.domains.PaymentMethod;
 import com.example.payment_service.domains.PaymentStatus;
+import com.example.payment_service.domains.RefundStatus;
 import com.example.payment_service.dto.ApiResponse;
 import com.example.payment_service.dto.MerchantResponse;
 import com.example.payment_service.dto.PaymentRequest;
 import com.example.payment_service.dto.PaymentResponse;
+import com.example.payment_service.dto.RefundResponse;
 import com.example.payment_service.dto.UpdatePaymentStatusRequest;
 import com.example.payment_service.entity.PaymentEntity;
-import com.example.payment_service.entity.repository.PaymentRepository;
+import com.example.payment_service.entity.RefundEntity;
 import com.example.payment_service.exceptions.InvalidPaymentStatusTransitionException;
 import com.example.payment_service.exceptions.InvalidRefundException;
 import com.example.payment_service.exceptions.MerchantBlockedException;
 import com.example.payment_service.exceptions.MerchantInactiveException;
 import com.example.payment_service.exceptions.PaymentNotFoundException;
 import com.example.payment_service.feign.MerchantClient;
+import com.example.payment_service.repository.PaymentRepository;
+import com.example.payment_service.repository.RefundRepository;
 import com.example.payment_service.validator.PaymentStatusValidator;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -31,6 +36,7 @@ public class PaymentServiceImpl implements PaymentService{
 	
 	private final MerchantClient merchantclient;
 	private final PaymentRepository repo;
+	private final RefundRepository refundRepo;
 
 	private final PaymentStatusValidator validator = new PaymentStatusValidator();
 	@Override
@@ -115,23 +121,37 @@ PaymentEntity payment = repo.findByPaymentReference(paymentReference).orElseThro
 	}
 
 	@Override
-	public PaymentResponse RefundPayments(UUID paymentRefernce) {
+	@Transactional
+	public RefundResponse RefundPayments(UUID paymentRefernce) {
 		// TODO Auto-generated method stub
 		
-	PaymentEntity payment = repo.findByPaymentReference(paymentRefernce).orElseThrow(() -> new PaymentNotFoundException("Resource doesn't exists"));
+	PaymentEntity payment = repo.findByPaymentReference(paymentRefernce).orElseThrow(() -> new PaymentNotFoundException("Resource doesn;t exists"));
 	if(payment.getStatus().equals(PaymentStatus.CAPTURED) || payment.getStatus().equals(PaymentStatus.SETTLED)) {
 		payment.setStatus(PaymentStatus.REFUNDED);
 	}else {
-		throw new InvalidRefundException("Refund is not completed");
+		throw new InvalidRefundException("Refund is allowed only for CAPTURED or SETTLED payments.");
 	}
-	PaymentEntity refund  = repo.save(payment);
 	
-	return PaymentResponse.builder()
-			.paymentReference(refund.getPaymentReference())
-			.amount(refund.getAmount())
-			.currency(refund.getCurrency())
-			.status(refund.getStatus())
-			.createdAt(refund.getCreatedAt())
+	PaymentEntity updatedPayment = repo.save(payment);
+
+	
+	
+	RefundEntity  refund = RefundEntity.builder()
+			.refundReference(UUID.randomUUID())
+			.paymentReference(updatedPayment.getPaymentReference())
+			.amount(updatedPayment.getAmount())
+			.status(RefundStatus.SUCCESS)
+			.build();
+	
+	RefundEntity savedRefund = refundRepo.save(refund);
+	
+	
+	return RefundResponse.builder()
+			.refundReference(savedRefund.getRefundReference())
+			.paymentReference(savedRefund.getPaymentReference())
+			.refundAmount(savedRefund.getAmount())
+			.status(savedRefund.getStatus())
+			.createdAt(savedRefund.getCreatedAt())
 			.build();
 	
 		

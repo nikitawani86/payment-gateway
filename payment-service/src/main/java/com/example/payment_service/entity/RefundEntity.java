@@ -39,6 +39,10 @@ public class RefundEntity {
 	@Column(nullable = false , unique = true)
 	private Long id;
 	
+	@Column(name = "refund_reference" , nullable= false, unique = true)
+	private UUID refundReference;
+	
+	
 	@Column(name = "payment_reference",nullable = false)
 	private UUID paymentReference;
 	

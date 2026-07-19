@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.payment_service.dto.ApiResponse;
 import com.example.payment_service.dto.PaymentRequest;
 import com.example.payment_service.dto.PaymentResponse;
+import com.example.payment_service.dto.RefundResponse;
 import com.example.payment_service.dto.UpdatePaymentStatusRequest;
 import com.example.payment_service.service.PaymentService;
 import com.example.payment_service.service.PaymentServiceImpl;
@@ -79,5 +80,21 @@ public class PaymentController {
 							
 		
 	}
-
+	
+	
+	//Create Refund API
+	@PostMapping("/refund/{paymentReference}")
+	public ResponseEntity<ApiResponse<RefundResponse>> createRefund(@PathVariable UUID paymentReference){
+		RefundResponse response = service.RefundPayments(paymentReference);
+		
+		ApiResponse<RefundResponse> apiResponse = 
+				ApiResponse .<RefundResponse>builder()
+				.success(true)
+				.message("Refund is successful")
+				.data(response)
+				.timestamp(LocalDateTime.now())
+				.build();
+		
+		return ResponseEntity.ok(apiResponse);
+	}
 }

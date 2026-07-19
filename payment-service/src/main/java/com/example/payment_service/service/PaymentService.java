@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.example.payment_service.dto.PaymentRequest;
 import com.example.payment_service.dto.PaymentResponse;
+import com.example.payment_service.dto.RefundResponse;
 import com.example.payment_service.dto.UpdatePaymentStatusRequest;
 
 public interface PaymentService {
@@ -14,5 +15,5 @@ public interface PaymentService {
 	
 	PaymentResponse updatePaymentStatus(UUID paymentReference, UpdatePaymentStatusRequest request);
 	
-	PaymentResponse RefundPayments(UUID paymentRefernce);
+	RefundResponse RefundPayments(UUID paymentRefernce);
 }
