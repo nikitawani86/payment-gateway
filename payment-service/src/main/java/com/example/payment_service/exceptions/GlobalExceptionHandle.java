@@ -97,7 +97,7 @@ public class GlobalExceptionHandle {
 	}
 	
 	@ExceptionHandler(InvalidRefundException.class)
-	public ResponseEntity<ApiResponse<Void>> handlerInvalidRefundException(Exception ex){
+	public ResponseEntity<ApiResponse<Void>> handlerInvalidRefundException(InvalidRefundException ex){
 		ApiResponse<Void> response=  ApiResponse.<Void>builder().success(false).message("Internal Server Error").data(null).timestamp(LocalDateTime.now()).build();
 		 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 	}
