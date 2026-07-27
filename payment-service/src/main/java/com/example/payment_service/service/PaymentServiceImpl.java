@@ -19,12 +19,14 @@ import com.example.payment_service.dto.RefundResponse;
 import com.example.payment_service.dto.UpdatePaymentStatusRequest;
 import com.example.payment_service.entity.PaymentEntity;
 import com.example.payment_service.entity.RefundEntity;
+import com.example.payment_service.events.PaymentCreatedEvent;
 import com.example.payment_service.exceptions.InvalidPaymentStatusTransitionException;
 import com.example.payment_service.exceptions.InvalidRefundException;
 import com.example.payment_service.exceptions.MerchantBlockedException;
 import com.example.payment_service.exceptions.MerchantInactiveException;
 import com.example.payment_service.exceptions.PaymentNotFoundException;
 import com.example.payment_service.feign.MerchantClient;
+import com.example.payment_service.producer.PaymentEventProducer;
 import com.example.payment_service.repository.PaymentRepository;
 import com.example.payment_service.repository.RefundRepository;
 import com.example.payment_service.validator.PaymentStatusValidator;
@@ -39,7 +41,8 @@ public class PaymentServiceImpl implements PaymentService {
 	private final MerchantClient merchantclient;
 	private final PaymentRepository repo;
 	private final RefundRepository refundRepo;
-
+	private final PaymentEventProducer producer;
+	
 	private final PaymentStatusValidator validator = new PaymentStatusValidator();
 
 	@Override
@@ -60,6 +63,17 @@ public class PaymentServiceImpl implements PaymentService {
 				.status(PaymentStatus.INITIATED).build();
 
 		PaymentEntity paymentEntity = repo.save(payment);
+		
+		PaymentCreatedEvent event = PaymentCreatedEvent.builder()
+				.paymentReference(paymentEntity.getPaymentReference())
+				.merchantReference(paymentEntity.getMerchantReference())
+				.amount(paymentEntity.getAmount())
+				.currency(paymentEntity.getCurrency())
+				.paymentMethod(paymentEntity.getPaymentMethod())
+				.createdAt(paymentEntity.getCreatedAt())
+				.build();
+		
+	producer.publishPaymentCreatedEvent(event);
 
 		return PaymentResponse.builder().paymentReference(paymentEntity.getPaymentReference())
 				.currency(paymentEntity.getCurrency()).amount(paymentEntity.getAmount())
