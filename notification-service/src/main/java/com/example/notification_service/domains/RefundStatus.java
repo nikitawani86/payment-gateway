@@ -1,4 +1,4 @@
-package com.example.payment_service.domains;
+package com.example.notification_service.domains;
 
 public enum RefundStatus {
 	PENDING,

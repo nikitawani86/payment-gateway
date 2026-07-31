@@ -1,8 +1,10 @@
+server:
+  port: 8083
 spring:
   application:
     name: notification-service
   kafka:
-    bootstrap-server: localhost:9092
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: notification-group
       auto-offst-reset: earliest

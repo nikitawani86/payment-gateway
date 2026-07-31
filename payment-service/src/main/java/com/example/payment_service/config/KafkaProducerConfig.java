@@ -12,9 +12,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import com.example.payment_service.events.PaymentCreatedEvent;
-import com.fasterxml.jackson.databind.JsonSerializable;
+
 
 @Configuration
 public class KafkaProducerConfig {
@@ -30,7 +31,7 @@ public class KafkaProducerConfig {
 		
 		config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		
-		config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializable.class);
+		config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 		
 		return new DefaultKafkaProducerFactory<>(config);
 		
