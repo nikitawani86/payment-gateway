@@ -1,5 +1,11 @@
 package com.example.notification_service.service;
 
-public class NotificationService {
+import com.example.notification_service.events.PaymentCreatedEvent;
 
+/*
+ * Consumer should depend on abstraction not an implementation 
+ */
+
+public interface NotificationService {
+	void sendPaymentSuccessNotification(PaymentCreatedEvent event);
 }
