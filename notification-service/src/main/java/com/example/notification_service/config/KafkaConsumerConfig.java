@@ -15,6 +15,8 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import com.example.notification_service.events.PaymentCreatedEvent;
 
+import org.springframework.kafka.listener.ContainerProperties;
+
 @Configuration
 public class KafkaConsumerConfig {
 	
@@ -56,6 +58,10 @@ public class KafkaConsumerConfig {
 		ConcurrentKafkaListenerContainerFactory<String, PaymentCreatedEvent> factory = new ConcurrentKafkaListenerContainerFactory();
 		
 		factory.setConsumerFactory(consumerFactory());
+		
+	    factory.getContainerProperties()
+        .setAckMode(ContainerProperties.AckMode.MANUAL);
+
 		
 		return factory;
 	}

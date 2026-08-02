@@ -1,5 +1,11 @@
 server:
   port: 8083
+logging:
+  level:
+   root: INFO
+   
+  file: 
+   name: logs/notification-service.log
 spring:
   application:
     name: notification-service
@@ -7,5 +13,6 @@ spring:
     bootstrap-servers: localhost:9092
     consumer:
       group-id: notification-group
-      auto-offst-reset: earliest
+      auto-offest-reset: earliest
+  
      
