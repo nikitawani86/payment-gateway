@@ -14,6 +14,8 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import com.example.notification_service.events.PaymentCreatedEvent;
+import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.util.backoff.FixedBackOff;
 
 import org.springframework.kafka.listener.ContainerProperties;
 
@@ -58,7 +60,9 @@ public class KafkaConsumerConfig {
 		ConcurrentKafkaListenerContainerFactory<String, PaymentCreatedEvent> factory = new ConcurrentKafkaListenerContainerFactory();
 		
 		factory.setConsumerFactory(consumerFactory());
+		DefaultErrorHandler errorHandler = new DefaultErrorHandler(new FixedBackOff(5000L,2));
 		
+		factory.setCommonErrorHandler(errorHandler);
 	    factory.getContainerProperties()
         .setAckMode(ContainerProperties.AckMode.MANUAL);
 

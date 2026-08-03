@@ -8,4 +8,6 @@ import com.example.notification_service.events.PaymentCreatedEvent;
 
 public interface NotificationService {
 	void sendPaymentSuccessNotification(PaymentCreatedEvent event);
+	
+	void sendEmail(PaymentCreatedEvent event);
 }

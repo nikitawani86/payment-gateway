@@ -29,9 +29,12 @@ public class PaymentCreatedConsumer {
 			)
 	public void consume(PaymentCreatedEvent event,Acknowledgment acknowledgment) {
 		log.info("Received Payment Event: {}",event);
+		
+		
+		notificationService.sendEmail(event);
 		acknowledgment.acknowledge();
+		
 		log.info("Offset Committed Sucessfully");
-		//notificationService.sendPaymentSuccessNotification(event);
 	
 	}
 }

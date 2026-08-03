@@ -1,5 +1,7 @@
 package com.example.notification_service.service;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.stereotype.Service;
 
 import com.example.notification_service.events.PaymentCreatedEvent;
@@ -14,6 +16,8 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public void sendPaymentSuccessNotification(PaymentCreatedEvent event) {
+		
+	
 		// TODO Auto-generated method stub
 		System.out.println("===============================");
 		System.out.println("PAYMENT SUCCESS NOTIFICATION");
@@ -27,4 +31,11 @@ public class NotificationServiceImpl implements NotificationService {
 		
 	}
 
+	@Override
+	public void sendEmail(PaymentCreatedEvent event) {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("SMTP Server Down");
+	}
+
+	
 }
